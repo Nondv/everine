@@ -5,6 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.946"]
+                 [rum "0.10.8"]
                  [ring "1.6.2"]
                  [ring/ring-jetty-adapter "1.5.0"]]
   :main ^:skip-aot everine.core
