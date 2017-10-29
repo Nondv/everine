@@ -10,5 +10,5 @@
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}
   :plugins [[lein-ring "0.9.7"]]
-  :ring {:handler everine.core/handler
+  :ring {:handler everine.core/app
          :open-browser? false})
