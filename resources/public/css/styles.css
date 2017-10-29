@@ -1,0 +1,9 @@
+.todo-item {
+  font-size: 150%;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.todo-item--done {
+  color: lime;
+}
