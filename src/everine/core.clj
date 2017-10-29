@@ -1,13 +1,12 @@
 (ns everine.core
-  (:use ring.middleware.resource
+  (:use [ring.util.response :only [redirect]]
+        ring.middleware.resource
         ring.middleware.content-type)
   (:gen-class))
 
 
 (defn handler [request]
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body "Hello World"})
+  (redirect "/index.html"))
 
 (def app
   (-> handler
