@@ -13,7 +13,7 @@
   (swap! items-atom
          (fn [coll]
            (update-items-by-id id
-                               #(merge % {:done (not (:done %))})
+                               #(assoc % :done (not (:done %)))
                                coll))))
 
 (defn atom-add-item [items-atom]
