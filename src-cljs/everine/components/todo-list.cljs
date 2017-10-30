@@ -7,7 +7,7 @@
     (conj item-coll {:id (if max-id (inc max-id) 1) :label "new-item"})))
 
 (defn update-items-by-id [id f item-coll]
-  (map #(if (= (:id %) id) (f %) %) item-coll))
+  (mapv #(if (= (:id %) id) (f %) %) item-coll))
 
 (defn atom-toggle-items-by-id [id items-atom]
   (swap! items-atom
