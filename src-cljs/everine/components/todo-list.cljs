@@ -1,20 +1,20 @@
 (ns everine.components.todo-list
   (:use [everine.components.todo-item :only [todo-item]])
-  (:require [rum.core :as rum]))
+  (:require [rum.core :as rum]
+            [everine.utils :as utils]))
 
 (defn add-item [item-coll]
   (let [max-id (apply max (map :id item-coll))]
     (conj item-coll {:id (if max-id (inc max-id) 1) :label "new-item"})))
 
-(defn update-items-by-id [id f item-coll]
-  (mapv #(if (= (:id %) id) (f %) %) item-coll))
+(def update-by-id (partial utils/update-by :id))
 
 (defn atom-toggle-items-by-id [id items-atom]
   (swap! items-atom
          (fn [coll]
-           (update-items-by-id id
-                               #(assoc % :done (not (:done %)))
-                               coll))))
+           (update-by-id id
+                         #(assoc % :done (not (:done %)))
+                         coll))))
 
 (defn atom-add-item [items-atom]
   (swap! items-atom add-item))
