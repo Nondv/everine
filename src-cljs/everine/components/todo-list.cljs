@@ -9,24 +9,24 @@
 
 (def update-by-id (partial utils/update-by :id))
 
-(defn atom-toggle-items-by-id [id items-atom]
-  (swap! items-atom
-         (fn [coll]
-           (update-by-id id
-                         #(assoc % :done (not (:done %)))
-                         coll))))
+(defn toggle-item [item]
+  (assoc item :done (not (:done item))))
 
-(defn atom-add-item [items-atom]
-  (swap! items-atom add-item))
+(defn toggle-items-by-id
+  "Returns vector of items with toggled :done key (true/false) at elements with :id = `id`"
+  [id items]
+  (vec (update-by-id id toggle-item items)))
 
-(defn render-items [items-atom]
+(defn render-items [items dispatch]
   (map (fn [item]
          (-> item
-             (todo-item {:on-click #(atom-toggle-items-by-id (:id item) items-atom)})
-             (rum/with-key (:id item))))
-       @items-atom))
 
-(rum/defc todo-list [items-atom]
+             (todo-item {:on-click #(dispatch (toggle-items-by-id (:id item) items))})
+             (rum/with-key (:id item))))
+       items))
+
+(rum/defc todo-list
+  [items dispatch]
   [:div.todo-list
-   (render-items items-atom)
-   [:button {:on-click #(atom-add-item items-atom) :class "todo-list__add-item"} "Add item"]])
+   (render-items items dispatch)
+   [:button {:on-click #(dispatch (add-item items)) :class "todo-list__add-item"} "Add item"]])

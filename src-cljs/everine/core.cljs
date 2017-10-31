@@ -10,6 +10,7 @@
 (def items [{:id 1 :label "item1"} {:id 2 :label "item2"} {:id 3 :label "item3"}])
 
 (rum/defcs app < (rum/local items ::items) [state]
-  (todo-list (::items state)))
+  (let [items-atom (::items state)]
+    (todo-list @items-atom #(reset! items-atom %))))
 
 (rum/mount (app) (js/document.getElementById "app" ))
