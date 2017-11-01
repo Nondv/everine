@@ -1,6 +1,9 @@
 version: '3.0'
 
 services:
+  redis:
+    image: redis:alpine
+
   app:
     image: clojure:alpine
     working_dir: '/app'
@@ -11,3 +14,5 @@ services:
       - '.:/app'
     command: 'lein ring server'
     tty: true
+    depends_on:
+      - redis
