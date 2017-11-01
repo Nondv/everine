@@ -11,3 +11,8 @@
   (first (filter #(= value (key %)) maps)))
 
 (defn log [data] (js/console.log (str data)))
+
+(defn event-target-value [e]
+  (-> e
+      .-target
+      .-value))
