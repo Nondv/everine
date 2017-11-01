@@ -13,7 +13,7 @@ services:
       - '3000:3000'
       - '7888:7888'
     volumes:
-      - '.:/app'
+      - '.:/app:cached'
     command: 'lein ring server'
     tty: true
     depends_on:
