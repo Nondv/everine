@@ -7,6 +7,8 @@ services:
   app:
     image: clojure:alpine
     working_dir: '/app'
+    environment:
+      - "REDIS_URL=redis://redis"
     ports:
       - '3000:3000'
       - '7888:7888'

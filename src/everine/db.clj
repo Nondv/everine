@@ -1,8 +1,10 @@
 (ns everine.db
-  (:require [taoensso.carmine :as car :refer [wcar]])
+  (:require [taoensso.carmine :as car :refer [wcar]]
+            [environ.core :refer [env]])
   (:gen-class))
 
-(def ^:private redis-config {:pool {} :spec {:host "redis"}})
+(def ^:private redis-config {:pool {}
+                             :spec {:uri (env :redis-url)}})
 
 (defn- redis-set [key value] (wcar redis-config (car/set key value)))
 (defn- redis-get [key] (wcar redis-config (car/get key)))
