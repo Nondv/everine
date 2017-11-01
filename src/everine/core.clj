@@ -6,10 +6,9 @@
   (:gen-class))
 
 (defn wrap-root [handler]
-  (fn [req]
-    (handler (if (= (:uri req) "/")
-               (assoc req :uri "/index.html")
-               req))))
+  #(handler (if (not= (:uri %) "/")
+              %
+              (assoc % :uri "/index.html"))))
 
 (defroutes app-routes
   (route/not-found "<h1>Page not found</h1>"))
