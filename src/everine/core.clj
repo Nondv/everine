@@ -1,5 +1,6 @@
 (ns everine.core
-  (:require [compojure.core :refer :all]
+  (:require [everine.db :as db]
+            [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.util.response :refer [response]]
@@ -12,20 +13,13 @@
               %
               (assoc % :uri "/index.html"))))
 
-(def lists {:current "test list"
-            :lists [{:name "test list"
-                     :items [{:id 1 :label "do something"}
-                             {:id 2 :label "do nothing" :done true}]}
-                    {:name "empty list"
-                     :items [{:id 1 :label "got you!" :done true}]}]})
-
 (defn- save-data [data]
   (println data)
   data)
 
 (defroutes app-routes
-  (GET "/lists.json" [req] (response lists))
-  (POST "/lists.json" request ((comp response save-data :body) request))
+  (GET "/lists.json" [] (response (db/user-data "test-user")))
+  (POST "/lists.json" request (response {:ok (db/set-user-data "test-user" (:body request))}))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def app
