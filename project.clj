@@ -7,6 +7,7 @@
                  [org.clojure/clojurescript "1.9.946"]
                  [rum "0.10.8"]
                  [ring "1.6.2"]
+                 [compojure "1.6.0"]
                  [ring/ring-jetty-adapter "1.5.0"]]
   :main ^:skip-aot everine.core
   :target-path "target/%s"
