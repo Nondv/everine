@@ -13,7 +13,9 @@
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}
   :plugins [[lein-ring "0.9.7"]
+            [cider/cider-nrepl "0.16.0-SNAPSHOT"]
             [lein-cljsbuild "1.1.7"]]
+  :aliases {"hrepl" ["repl" ":headless" ":host" "0.0.0.0" ":port" "7888"]}
   :cljsbuild {:builds
               [{:id "cljsbuild" ;; name for a build
                 :source-paths ["src-cljs"]
