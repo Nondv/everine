@@ -1,5 +1,6 @@
 (ns everine.core
   (:require [everine.db :as db]
+            [environ.core :refer [env]]
             [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.adapter.jetty :as jetty]
@@ -31,5 +32,6 @@
       wrap-content-type
       wrap-root))
 
-(defn -main [& more]
-  (jetty/run-jetty app {:port 80 :join? false}))
+(defn -main [& [port]]
+  (let [port (Integer. (or port (env :port) 5000))]
+    (jetty/run-jetty app {:port port :join? false})))
