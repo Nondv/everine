@@ -25,6 +25,12 @@
                 :source-paths ["src-cljs"]
                 :compiler {:output-to "resources/public/javascripts/main.js"
                            :optimizations :whitespace
-                           :pretty-print true}}]}
+                           :pretty-print true}}
+               {:id "production"
+                :jar true
+                :source-paths ["src-cljs"]
+                :compiler {:output-to "resources/public/javascripts/main.js"
+                           :optimizations :advanced
+                           :pretty-print false}}]}
   :ring {:handler everine.core/app
          :open-browser? false})
