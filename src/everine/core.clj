@@ -2,6 +2,7 @@
   (:require [everine.db :as db]
             [compojure.core :refer :all]
             [compojure.route :as route]
+            [ring.adapter.jetty :as jetty]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.util.response :refer [response]]
             [ring.middleware.content-type :refer [wrap-content-type]]
@@ -29,3 +30,6 @@
       (wrap-resource "public")
       wrap-content-type
       wrap-root))
+
+(defn -main [& more]
+  (jetty/run-jetty app {:port 80 :join? false}))
