@@ -17,6 +17,7 @@
   :main ^:skip-aot everine.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}
+  :uberjar-name "everine-standalone.jar"
   :plugins [[lein-ring "0.9.7"]
             [cider/cider-nrepl "0.16.0-SNAPSHOT"]
             [lein-cljsbuild "1.1.7"]]
