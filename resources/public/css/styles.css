@@ -8,7 +8,7 @@
 }
 
 .todo-item__text--done {
-  color: lime;
+  text-decoration: line-through;
 }
 
 .todo-item__delete {
