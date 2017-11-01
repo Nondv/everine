@@ -14,7 +14,6 @@
   :profiles {:uberjar {:aot :all}}
   :plugins [[lein-ring "0.9.7"]
             [lein-cljsbuild "1.1.7"]]
-  :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds
               [{:id "cljsbuild" ;; name for a build
                 :source-paths ["src-cljs"]
