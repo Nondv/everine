@@ -14,7 +14,7 @@
                  [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]
                  [ring/ring-jetty-adapter "1.5.0"]]
-  ;; :main ^:skip-aot everine.core
+  :main everine.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}
   :uberjar-name "everine-standalone.jar"
