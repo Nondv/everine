@@ -26,6 +26,26 @@
   state)
 
 
+(defn submit-data [state]
+  (ajax/POST "/lists.json"
+             {:response-format (ajax/json-response-format {:keywords? true})
+              :format (ajax/json-request-format)
+              :params  {:current @(::current-list-name state)
+                        :lists   @(::lists state)}
+              :handler #(js/console.log "saved")}))
+
+(defn- dispatch-current-list-items [items state]
+  (let [current-list-name @(::current-list-name state)
+        lists-atom (::lists state)
+        lists @lists-atom
+        current-list (find-by-name current-list-name lists)
+        updated-current-list (replace-items items current-list)
+        updated-lists (replace-by-name current-list-name
+                                       updated-current-list
+                                       lists)]
+    (reset! lists-atom updated-lists)
+    (submit-data state)))
+
 (rum/defcs app <
   (rum/local [] ::lists)
   (rum/local "" ::current-list-name)
@@ -36,10 +56,9 @@
         current-list-name (::current-list-name state)
         current-list (find-by-name @current-list-name @lists)
         replace-current-list-items #(replace-by-name @current-list-name (replace-items % current-list) @lists)
-        dispatch #(reset! lists (replace-current-list-items %))
         change-current-name! #(reset! current-list-name %)]
     [:div.app
      (todo-list-select (map :name @lists) @current-list-name change-current-name!)
-     (todo-list (:items current-list) dispatch)]))
+     (todo-list (:items current-list) #(dispatch-current-list-items % state))]))
 
 (rum/mount (app) (js/document.getElementById "app" ))
