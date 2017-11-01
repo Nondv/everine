@@ -1,9 +1,8 @@
 (ns everine.core
-  (:use [ring.util.response :only [redirect]]
-        ring.middleware.resource
-        ring.middleware.content-type)
   (:require [compojure.core :refer :all]
-            [compojure.route :as route])
+            [compojure.route :as route]
+            [ring.middleware.content-type :refer [wrap-content-type]]
+            [ring.middleware.resource :refer [wrap-resource]])
   (:gen-class))
 
 (defn wrap-root [handler]
