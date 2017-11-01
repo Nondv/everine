@@ -6,6 +6,7 @@ services:
     working_dir: '/app'
     ports:
       - '3000:3000'
+      - '7888:7888'
     volumes:
       - '.:/app'
     command: 'lein ring server'
