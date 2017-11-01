@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.946"]
                  [rum "0.10.8"]
+                 [cljs-ajax "0.7.2"]
                  [ring "1.6.2"]
                  [ring/ring-json "0.4.0"]
                  [compojure "1.6.0"]

@@ -1,6 +1,7 @@
 (ns everine.core
   (:use [everine.components.todo-list :only [todo-list]])
   (:require [rum.core :as rum]
+            [ajax.core :as ajax]
             [everine.components.todo-list-select :refer [todo-list-select]]
             [everine.utils :as utils]))
 
@@ -9,10 +10,6 @@
 (println "Hello World!")
 (println "This is ClojureScript!")
 
-(def items [{:id 1 :label "item1"} {:id 2 :label "item2"} {:id 3 :label "item3"}])
-(def lists [{:name "test-list"  :items items}
-            {:name "empty-list" :items []}])
-
 (def update-by-name (partial utils/update-by :name))
 (defn replace-by-name [name data maps]
   (update-by-name name (fn [_] data) maps))
@@ -20,9 +17,19 @@
 
 (defn replace-items [data list] (assoc list :items data))
 
+(defn load-lists [state]
+  (ajax/GET "/lists.json"
+            {:response-format (ajax/json-response-format {:keywords? true})
+             :handler (fn [{current :current lists :lists}]
+                        (reset! (::lists state) lists)
+                        (reset! (::current-list-name state) current))})
+  state)
+
+
 (rum/defcs app <
-  (rum/local lists ::lists)
-  (rum/local "test-list" ::current-list-name)
+  (rum/local [] ::lists)
+  (rum/local "" ::current-list-name)
+  {:did-mount load-lists}
   [state]
 
   (let [lists (::lists state)
