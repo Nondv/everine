@@ -1,6 +1,7 @@
 (ns everine.core
   (:use [everine.components.todo-list :only [todo-list]])
   (:require [rum.core :as rum]
+            [everine.components.todo-list-select :refer [todo-list-select]]
             [everine.utils :as utils]))
 
 (enable-console-print!)
@@ -28,7 +29,10 @@
         current-list-name (::current-list-name state)
         current-list (find-by-name @current-list-name @lists)
         replace-current-list-items #(replace-by-name @current-list-name (replace-items % current-list) @lists)
-        dispatch #(reset! lists (replace-current-list-items %))]
-    (todo-list (:items current-list) dispatch)))
+        dispatch #(reset! lists (replace-current-list-items %))
+        change-current-name! #(reset! current-list-name %)]
+    [:div.app
+     (todo-list-select (map :name @lists) @current-list-name change-current-name!)
+     (todo-list (:items current-list) dispatch)]))
 
 (rum/mount (app) (js/document.getElementById "app" ))
