@@ -1,6 +1,8 @@
 (ns everine.core
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
+            [ring.middleware.json :refer [wrap-json-response]]
+            [ring.util.response :refer [response]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.resource :refer [wrap-resource]])
   (:gen-class))
@@ -10,11 +12,20 @@
               %
               (assoc % :uri "/index.html"))))
 
+(def lists {:current "test list"
+            :lists [{:name "test list"
+                     :items [{:id 1 :label "do something"}
+                             {:id 2 :label "do nothing" :done true}]}
+                    {:name "empty list"
+                     :items [{:id 1 :label "got you!" :done true}]}]})
+
 (defroutes app-routes
+  (GET "/lists.json" [req] (response lists))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def app
   (-> app-routes
+      wrap-json-response
       (wrap-resource "public")
       wrap-content-type
       wrap-root))
