@@ -1,9 +1,18 @@
 .todo-item {
-  font-size: 150%;
   margin-bottom: 10px;
+}
+
+.todo-item__text {
+  font-size: 150%;
   cursor: pointer;
 }
 
-.todo-item--done {
+.todo-item__text--done {
   color: lime;
+}
+
+.todo-item__delete {
+  cursor: pointer;
+  color: red;
+  margin-right: 5px;
 }

@@ -18,13 +18,19 @@
   [id items]
   (vec (update-by-id id toggle-item items)))
 
+(defn remove-items-by [key val items]
+  (vec (filter #(not= val (key %)) items)))
+
 (defn render-items [items dispatch]
   (map (fn [item]
-         (-> item
-
-             (todo-item {:on-click #(dispatch (toggle-items-by-id (:id item) items))})
-             (rum/with-key (:id item))))
+         (let [id (:id item)
+               on-click #(dispatch (toggle-items-by-id id items))
+               on-delete #(dispatch (remove-items-by :id id items))]
+           (-> item
+               (todo-item {:on-click on-click :on-delete on-delete})
+               (rum/with-key (:id item)))))
        items))
+
 
 (rum/defc todo-list
   [items dispatch]
