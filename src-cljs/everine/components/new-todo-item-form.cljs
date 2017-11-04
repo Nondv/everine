@@ -18,5 +18,5 @@
     [:form
      {:class "new-todo-item-form"
       :on-submit on-submit}
-     (text-input text "new-todo-item-form__input" change-text!)
+     (text-input "Description" text "new-todo-item-form__input" change-text!)
      (submit-button "Add item" "new-todo-item-form__submit")]))

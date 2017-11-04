@@ -18,5 +18,5 @@
     [:form
      {:class "todo-list-form"
       :on-submit on-submit}
-     (text-input name "todo-list-form__input" change-name!)
+     (text-input "Name" name "todo-list-form__input" change-name!)
      (submit-button "Add list" "todo-list-form__submit")]))
