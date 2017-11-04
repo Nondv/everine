@@ -6,6 +6,10 @@
   border: 1px solid rgba(0,0,0,.12);
 }
 
+.app {
+  margin-top: 10px;
+}
+
 .todo-list {
   margin-top: 10px;
 }
