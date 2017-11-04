@@ -10,5 +10,6 @@
 
 (rum/defc todo-list-select [names current on-change]
   (into [:select {:value current
+                  :class "everine-select"
                   :on-change #(on-change (utils/event-target-value %))}]
         (options names current on-change)))
