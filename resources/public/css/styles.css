@@ -6,6 +6,10 @@
   border: 1px solid rgba(0,0,0,.12);
 }
 
+.todo-list {
+  margin-top: 10px;
+}
+
 .todo-item {
   margin-bottom: 10px;
 }
@@ -13,6 +17,7 @@
 .todo-item__text {
   font-size: 150%;
   cursor: pointer;
+  vertical-align: top;
 }
 
 .todo-item__text--done {

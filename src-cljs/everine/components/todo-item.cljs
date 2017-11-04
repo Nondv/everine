@@ -12,5 +12,5 @@
         label (:label item)
         text-classes (item-text-classes item)]
     [:div.todo-item
-     [:a.todo-item__delete {:on-click on-delete} "[X]"]
+     [:i.material-icons.todo-item__delete {:on-click on-delete} "delete_forever"]
      [:span.todo-item__text {:on-click on-click :class text-classes} label]]))
