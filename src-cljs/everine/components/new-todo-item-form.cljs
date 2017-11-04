@@ -1,17 +1,6 @@
 (ns everine.components.new-todo-item-form
   (:require [rum.core :as rum]
-            [everine.utils :as utils]))
-
-(defn- submit-button []
-  [:input {:type :submit
-           :value "Add item"
-           :class "new-todo-item-form__submit"}])
-
-(defn- text-input [value on-change]
-  [:input {:type :text
-           :value value
-           :on-change #(on-change (utils/event-target-value %))
-           :class "new-todo-item-form__input"} ])
+            [everine.elements :refer [text-input submit-button]]))
 
 (defn- item [text]
   {:label text})
@@ -29,5 +18,5 @@
     [:form
      {:class "new-todo-item-form"
       :on-submit on-submit}
-     (text-input text change-text!)
-     (submit-button)]))
+     (text-input text "new-todo-item-form__input" change-text!)
+     (submit-button "Add item" "new-todo-item-form__submit")]))
