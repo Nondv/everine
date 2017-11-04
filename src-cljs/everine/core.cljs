@@ -3,6 +3,7 @@
   (:require [rum.core :as rum]
             [ajax.core :as ajax]
             [everine.components.todo-list-select :refer [todo-list-select]]
+            [everine.components.todo-list-form :refer [todo-list-form]]
             [everine.utils :as utils]))
 
 (enable-console-print!)
@@ -46,6 +47,14 @@
     (reset! lists-atom updated-lists)
     (submit-data state)))
 
+(defn- add-list [list state]
+  (let [lists-atom (::lists state)
+        lists @lists-atom]
+    ;; should I throw exception if found?
+    (when-not (find-by-name (:name list) lists)
+      (reset! lists-atom
+              (conj lists list)))))
+
 (rum/defcs app <
   (rum/local [] ::lists)
   (rum/local "" ::current-list-name)
@@ -59,6 +68,7 @@
         change-current-name! #(reset! current-list-name %)]
     [:div.app
      (todo-list-select (map :name @lists) @current-list-name change-current-name!)
+     (todo-list-form #(add-list % state))
      (todo-list (:items current-list) #(dispatch-current-list-items % state))]))
 
 (rum/mount (app) (js/document.getElementById "app" ))
