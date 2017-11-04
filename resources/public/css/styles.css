@@ -16,6 +16,7 @@
 
 .todo-item {
   margin-bottom: 10px;
+  font-size: 18px;
 }
 
 .todo-item__text {
