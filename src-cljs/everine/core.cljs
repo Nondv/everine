@@ -67,8 +67,8 @@
         replace-current-list-items #(replace-by-name @current-list-name (replace-items % current-list) @lists)
         change-current-name! #(reset! current-list-name %)]
     [:div.app
-     (todo-list-select (map :name @lists) @current-list-name change-current-name!)
      (todo-list-form #(add-list % state))
+     (todo-list-select (map :name @lists) @current-list-name change-current-name!)
      (todo-list (:items current-list) #(dispatch-current-list-items % state))]))
 
 (rum/mount (app) (js/document.getElementById "app" ))
