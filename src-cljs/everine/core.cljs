@@ -55,6 +55,10 @@
       (reset! lists-atom
               (conj lists list)))))
 
+(defn- change-current-list-name! [new-name state]
+  (reset! (::current-list-name state) new-name)
+  (submit-data state))
+
 (rum/defcs app <
   (rum/local [] ::lists)
   (rum/local "" ::current-list-name)
@@ -64,11 +68,10 @@
   (let [lists (::lists state)
         current-list-name (::current-list-name state)
         current-list (find-by-name @current-list-name @lists)
-        replace-current-list-items #(replace-by-name @current-list-name (replace-items % current-list) @lists)
-        change-current-name! #(reset! current-list-name %)]
+        replace-current-list-items #(replace-by-name @current-list-name (replace-items % current-list) @lists)]
     [:div.app
      (todo-list-form #(add-list % state))
-     (todo-list-select (map :name @lists) @current-list-name change-current-name!)
+     (todo-list-select (map :name @lists) @current-list-name #(change-current-list-name! % state))
      (todo-list (:items current-list) #(dispatch-current-list-items % state))]))
 
 (rum/mount (app) (js/document.getElementById "app" ))
