@@ -6,6 +6,8 @@
             [ring.adapter.jetty :as jetty]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.util.response :refer [response]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.session :refer [wrap-session]]
             [ring.middleware.content-type :refer [wrap-content-type]]
             [ring.middleware.resource :refer [wrap-resource]])
   (:gen-class))
@@ -30,6 +32,8 @@
       wrap-json-response
       (wrap-resource "public")
       wrap-content-type
+      wrap-session
+      wrap-params
       wrap-root))
 
 (defn -main [& [port]]
