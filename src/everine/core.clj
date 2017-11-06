@@ -1,5 +1,6 @@
 (ns everine.core
   (:require [everine.db :as db]
+            [everine.auth :as auth]
             [environ.core :refer [env]]
             [compojure.core :refer :all]
             [compojure.route :as route]
@@ -22,16 +23,19 @@
   data)
 
 (defroutes app-routes
-  (GET "/lists.json" [] (response (db/user-data "test-user")))
-  (POST "/lists.json" request (response {:ok (db/set-user-data "test-user" (:body request))}))
+  (GET "/lists.json" request (response (db/user-data (auth/current-user request))))
+  (POST "/lists.json" request
+        (println (:body request))
+        (response {:ok (db/set-user-data (auth/current-user request) (:body request))}))
   (route/not-found "<h1>Page not found</h1>"))
 
 (def app
-  (-> app-routes
+  (-> (routes auth/auth-routes app-routes)
       wrap-json-body
       wrap-json-response
       (wrap-resource "public")
       wrap-content-type
+      auth/wrap-auth
       wrap-session
       wrap-params
       wrap-root))

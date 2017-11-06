@@ -9,6 +9,7 @@
                  [rum "0.10.8"]
                  [cljs-ajax "0.7.2"]
                  [com.taoensso/carmine "2.16.0"]
+                 [cheshire "5.8.0"]
                  [environ "1.1.0"]
                  [ring "1.6.2"]
                  [ring/ring-json "0.4.0"]
