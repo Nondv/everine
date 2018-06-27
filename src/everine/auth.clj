@@ -49,10 +49,14 @@
   ([access-data] (session-from-access-data access-data nil))
   ([access-data session] (assoc session :vk-user-id (:user_id access-data))))
 
+(def dev-access-data {:user_id 123})
+
 (defroutes auth-routes
   (GET "/login" request
-       (redirect (vk-auth/oauth-link {:client-id client-id
-                                      :redirect-uri auth-redirect-uri})))
+       (if (= (env :env) "production")
+         (redirect (vk-auth/oauth-link {:client-id client-id
+                                        :redirect-uri auth-redirect-uri}))
+         (assoc (redirect "/") :session (session-from-access-data dev-access-data))))
   (GET auth-redirect-path request
        (let [access-data   (get-access-data (get-in request [:params "code"]))
              new-session   (session-from-access-data access-data (:session request))]
