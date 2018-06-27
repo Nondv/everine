@@ -47,9 +47,8 @@
 
 (defroutes auth-routes
   (GET "/login" request
-       (-> (redirect (vk-auth/oauth-link {:client-id client-id
-                                          :redirect-uri auth-redirect-uri}))
-           (assoc :session {:test 123})))
+       (redirect (vk-auth/oauth-link {:client-id client-id
+                                      :redirect-uri auth-redirect-uri})))
   (GET auth-redirect-path request
        (let [session       (or (:session request) {})
              access-data   (get-access-data (get-in request [:params "code"]))
