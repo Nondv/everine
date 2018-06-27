@@ -45,12 +45,15 @@
                               (redirect "/login")
                               (handler %))))
 
+(defn session-from-access-data
+  ([access-data] (session-from-access-data access-data nil))
+  ([access-data session] (assoc session :vk-user-id (:user_id access-data))))
+
 (defroutes auth-routes
   (GET "/login" request
        (redirect (vk-auth/oauth-link {:client-id client-id
                                       :redirect-uri auth-redirect-uri})))
   (GET auth-redirect-path request
-       (let [session       (or (:session request) {})
-             access-data   (get-access-data (get-in request [:params "code"]))
-             user-id       (:user_id access-data)]
-           (assoc (redirect "/") :session (assoc session :vk-user-id user-id)))))
+       (let [access-data   (get-access-data (get-in request [:params "code"]))
+             new-session   (session-from-access-data access-data (:session request))]
+         (assoc (redirect "/") :session new-session))))
