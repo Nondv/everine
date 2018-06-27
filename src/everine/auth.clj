@@ -1,42 +1,34 @@
 (ns everine.auth
-  (:require [nondv.vk-auth.core :as vk-auth]
+  (:require [everine.auth.dev :as dev-adapter]
+            [everine.auth.vk :as vk-adapter]
             [environ.core :refer [env]]
-            [cheshire.core :as cheshire]
             [compojure.core :refer :all]
             [ring.util.response :refer [redirect]]))
+(def current-env (env :env))
+(def production? (= current-env "production"))
 
-(def host "https://everine.herokuapp.com")
-(def auth-redirect-path "/authorization_redirect")
-(def auth-redirect-uri (str host auth-redirect-path))
-
-(def client-secret (env :vk-app-secret))
-(def client-id     (env :vk-app-id))
-
-(defn vk-user-id [request]
-  (get-in request [:session :vk-user-id]))
+(defn user-id [request]
+  (get-in request [:session :user-id]))
 
 (defn authorized? [request]
-  (vk-user-id request))
+  (user-id request))
 
 (def not-authorized? (complement authorized?))
 
-(defn- get-json [uri]
-  (cheshire/parse-string (slurp uri) true))
-
-(defn- get-access-data [code]
-  (get-json
-   (vk-auth/access-token-link {:client-id      client-id
-                               :client-secret  client-secret
-                               :redirect-uri   auth-redirect-uri
-                               :code           code})))
-
 (defn current-user [request]
   (when (authorized? request)
-    (str "vk_" (vk-user-id request))))
+    (user-id request)))
+
+(def routes-with-disabled-auth
+  (filter
+   identity
+   (flatten ["/login"
+             (when-not production? dev-adapter/routes-with-disabled-auth)
+             vk-adapter/routes-with-disabled-auth])))
 
 (defn- need-auth? [request except-routes]
   (not (some #(= % (:uri request))
-             (into ["/login" auth-redirect-path] except-routes))))
+             (into routes-with-disabled-auth except-routes))))
 
 (defn wrap-auth
   "Redirects to /login if user not logged in"
@@ -45,19 +37,18 @@
                               (redirect "/login")
                               (handler %))))
 
-(defn session-from-access-data
-  ([access-data] (session-from-access-data access-data nil))
-  ([access-data session] (assoc session :vk-user-id (:user_id access-data))))
 
-(def dev-access-data {:user_id 123})
+(def adapters-additional-routes
+  (apply routes (filter
+                 identity
+                 [(when-not production? dev-adapter/additional-routes)
+                  vk-adapter/additional-routes])))
+
+(defn handle-login [request]
+  (if production?
+    (vk-adapter/login-handler request)
+    (dev-adapter/login-handler request)))
 
 (defroutes auth-routes
-  (GET "/login" request
-       (if (= (env :env) "production")
-         (redirect (vk-auth/oauth-link {:client-id client-id
-                                        :redirect-uri auth-redirect-uri}))
-         (assoc (redirect "/") :session (session-from-access-data dev-access-data))))
-  (GET auth-redirect-path request
-       (let [access-data   (get-access-data (get-in request [:params "code"]))
-             new-session   (session-from-access-data access-data (:session request))]
-         (assoc (redirect "/") :session new-session))))
+  adapters-additional-routes
+  (GET "/login" request (handle-login request)))
