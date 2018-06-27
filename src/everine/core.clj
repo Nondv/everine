@@ -19,13 +19,11 @@
               (assoc % :uri "/index.html"))))
 
 (defn- save-data [data]
-  (println data)
   data)
 
 (defroutes app-routes
   (GET "/lists.json" request (response (db/user-data (auth/current-user request))))
   (POST "/lists.json" request
-        (println (:body request))
         (response {:ok (db/set-user-data (auth/current-user request) (:body request))}))
   (route/not-found "<h1>Page not found</h1>"))
 
